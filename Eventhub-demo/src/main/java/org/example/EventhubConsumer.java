@@ -6,14 +6,15 @@ import com.azure.messaging.eventhubs.*;
 import com.azure.messaging.eventhubs.checkpointstore.blob.BlobCheckpointStore;
 import com.azure.messaging.eventhubs.models.*;
 import com.azure.storage.blob.*;
+import org.common.base.SystemParams;
 
 import java.time.Duration;
 import java.util.function.Consumer;
 
 public class EventhubConsumer {
-    private static final String connectionString = "Endpoint=sb://zyb-test-will-delete.servicebus.chinacloudapi.cn/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=qmi67bxQiyMUqJsS6KtXmkET80ynPLLOS45Oth8IzhM=";
+    private static final String connectionString = SystemParams.EventhubDemoStr1;
     private static final String eventHubName = "test00";
-    private static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=zybrediscopytest01;AccountKey=CfwpyOfeHmxKApXf0WVbWU2NU3Ud/mBxrguEMvZe1cZrtxTQ1qzHuCahCJeYdVnqFdPV4AlG15Vc+AStX4FQsw==;EndpointSuffix=core.chinacloudapi.cn";
+    private static final String storageConnectionString = SystemParams.EventhubDemoStr2;
     private static final String storageContainerName = "checkpoint00";
 
     public void consumer() throws Exception {

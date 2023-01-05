@@ -4,6 +4,7 @@ import com.azure.messaging.eventhubs.EventData;
 import com.azure.messaging.eventhubs.EventDataBatch;
 import com.azure.messaging.eventhubs.EventHubClientBuilder;
 import com.azure.messaging.eventhubs.EventHubProducerClient;
+import org.common.base.SystemParams;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +14,8 @@ import java.util.stream.IntStream;
 public class EventhubProducer {
     public void sendMessage() {
 
-        String connectionString = "Endpoint=sb://zyb-test-will-delete.servicebus.chinacloudapi.cn/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=qmi67bxQiyMUqJsS6KtXmkET80ynPLLOS45Oth8IzhM=";
+        String connectionString = SystemParams.EventhubDemoStr3;
+
         String eventHubName = "test01";
 
 
