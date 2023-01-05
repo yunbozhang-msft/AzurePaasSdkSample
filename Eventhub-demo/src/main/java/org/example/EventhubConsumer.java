@@ -1,17 +1,20 @@
 package org.example;
 
+import com.azure.core.amqp.AmqpRetryMode;
+import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.messaging.eventhubs.*;
 import com.azure.messaging.eventhubs.checkpointstore.blob.BlobCheckpointStore;
 import com.azure.messaging.eventhubs.models.*;
 import com.azure.storage.blob.*;
 
+import java.time.Duration;
 import java.util.function.Consumer;
 
 public class EventhubConsumer {
-    private static final String connectionString = "<Event Hubs namespace connection string>";
-    private static final String eventHubName = "<Event hub name>";
-    private static final String storageConnectionString = "<Storage connection string>";
-    private static final String storageContainerName = "<Storage container name>";
+    private static final String connectionString = "Endpoint=sb://zyb-test-will-delete.servicebus.chinacloudapi.cn/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=qmi67bxQiyMUqJsS6KtXmkET80ynPLLOS45Oth8IzhM=";
+    private static final String eventHubName = "test00";
+    private static final String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=zybrediscopytest01;AccountKey=CfwpyOfeHmxKApXf0WVbWU2NU3Ud/mBxrguEMvZe1cZrtxTQ1qzHuCahCJeYdVnqFdPV4AlG15Vc+AStX4FQsw==;EndpointSuffix=core.chinacloudapi.cn";
+    private static final String storageContainerName = "checkpoint00";
 
     public void consumer() throws Exception {
         // Create a blob container client that you use later to build an event processor client to receive and process events
@@ -23,6 +26,8 @@ public class EventhubConsumer {
         // Create a builder object that you will use later to build an event processor client to receive and process events and errors.
         EventProcessorClientBuilder eventProcessorClientBuilder = new EventProcessorClientBuilder()
                 .connectionString(connectionString, eventHubName)
+                .retry(new AmqpRetryOptions()
+                        .setMaxRetries(3).setMode(AmqpRetryMode.FIXED).setDelay(Duration.ofSeconds(120)))
                 .consumerGroup(EventHubClientBuilder.DEFAULT_CONSUMER_GROUP_NAME)
                 .processEvent(PARTITION_PROCESSOR)
                 .processError(ERROR_HANDLER)
@@ -37,11 +42,11 @@ public class EventhubConsumer {
         System.out.println("Press enter to stop.");
         System.in.read();
 
-        System.out.println("Stopping event processor");
-        eventProcessorClient.stop();
-        System.out.println("Event processor stopped.");
+        // System.out.println("Stopping event processor");
+        // eventProcessorClient.stop();
+        //System.out.println("Event processor stopped.");
 
-        System.out.println("Exiting process");
+        // System.out.println("Exiting process");
     }
 
     public static final Consumer<EventContext> PARTITION_PROCESSOR = eventContext -> {
@@ -55,6 +60,7 @@ public class EventhubConsumer {
         if (eventData.getSequenceNumber() % 10 == 0) {
             eventContext.updateCheckpoint();
         }
+
     };
 
     public static final Consumer<ErrorContext> ERROR_HANDLER = errorContext -> {
