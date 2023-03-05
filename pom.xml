@@ -13,6 +13,8 @@
         <module>Key-Vault-demo</module>
         <module>Eventhub-demo</module>
         <module>Base-Module</module>
+        <module>Storage-demo</module>
+        <module>Spring-cloud-stream-kafka</module>
     </modules>
 
     <properties>

@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>Eventhub-demo</artifactId>
+    <artifactId>Storage-demo</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,38 +18,27 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>Base-Module</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.6.0</version>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-storage-blob</artifactId>
+            <version>12.20.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-sdk-bom</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.8</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-messaging-eventhubs</artifactId>
-            <version>5.7.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-messaging-eventhubs-checkpointstore-blob</artifactId>
-            <version>1.6.0</version>
-        </dependency>
     </dependencies>
 
 </project>

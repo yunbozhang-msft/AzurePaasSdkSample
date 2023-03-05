@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: zyb-test-will-delete.servicebus.chinacloudapi.cn:9093
+          configuration:
+            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="Endpoint=sb://zyb-test-will-delete.servicebus.chinacloudapi.cn/;SharedAccessKeyName=ttt;SharedAccessKey=xxx;EntityPath=test00";
+            sasl.mechanism: PLAIN
+            security.protocol: SASL_SSL
+            autoCreateTopics: false
+      bindings:
+        greetings-in:
+          destination: greetings
+          contentType: application/json
+        greetings-out:
+          destination: greetings
+          contentType: application/json

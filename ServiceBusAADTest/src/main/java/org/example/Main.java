@@ -6,50 +6,44 @@ import com.azure.identity.AzureAuthorityHosts;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusMessage;
-import com.azure.messaging.servicebus.ServiceBusSenderAsyncClient;
+import com.azure.messaging.servicebus.ServiceBusMessageBatch;
+import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.common.base.SystemParams;
 
-import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
 
-
-        System.setProperty("AZURE_CLIENT_ID", SystemParams.ServiceBusAADTestStr1);
-        System.setProperty("AZURE_CLIENT_SECRET", SystemParams.ServiceBusAADTestStr2);
-        System.setProperty("AZURE_TENANT_ID", SystemParams.ServiceBusAADTestStr3);
-
+         System.setProperty("AZURE_CLIENT_ID", SystemParams.ServiceBusAADTestStr1);
+         System.setProperty("AZURE_CLIENT_SECRET", SystemParams.ServiceBusAADTestStr2);
+         System.setProperty("AZURE_TENANT_ID", SystemParams.ServiceBusAADTestStr3);
 
 
-        TokenCredential credential =
-                new DefaultAzureCredentialBuilder().authorityHost(AzureAuthorityHosts.AZURE_CHINA)
-                .build();
+        String queueName = "test01";
 
 
-        ServiceBusSenderAsyncClient sender = new ServiceBusClientBuilder()
-                .credential("test01-servicebus.servicebus.chinacloudapi.cn", credential)
+        TokenCredential credential = new DefaultAzureCredentialBuilder().authorityHost(AzureAuthorityHosts.AZURE_CHINA).build();
+        ServiceBusSenderClient sender = new ServiceBusClientBuilder()
+                //.connectionString(connectionString)
+                .credential("zyb-can-delete.servicebus.chinacloudapi.cn",credential)
                 .sender()
-                .queueName("test01")
-                .buildAsyncClient();
+                .queueName(queueName)
+                .buildClient();
 
-        ServiceBusMessage message = new ServiceBusMessage(BinaryData.fromString("Microsoft HQ is at Redmond."));
-        sender.sendMessage(message)
-                .subscribe(
-                        unused -> System.out.println("Sent."),
-                        error -> System.err.println("Error occurred while publishing message: " + error),
-                        () -> System.out.println("Message was sent with id."));
+        // Create a message to send.
+        final ServiceBusMessageBatch messageBatch = sender.createMessageBatch();
+        IntStream.range(0, 10)
+                .mapToObj(index -> new ServiceBusMessage(BinaryData.fromString("Hello world! " + index)))
+                .forEach(message -> messageBatch.tryAddMessage(message));
 
-        // .subscribe is not a blocking call. We sleep here so the program does not end before the send is complete.
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        // Send that message. It completes successfully when the event has been delivered to the Service queue or topic.
+        // It completes with an error if an exception occurred while sending the message.
+        sender.sendMessages(messageBatch);
 
         // Close the sender.
         sender.close();
-
-
-
     }
+
+
 }

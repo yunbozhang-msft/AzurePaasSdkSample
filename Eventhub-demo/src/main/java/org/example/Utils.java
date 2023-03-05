@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Utils {
 
@@ -16,7 +17,7 @@ public class Utils {
     public List<EventData> getList(int size) {
         List<EventData> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            list.add(new EventData("2"));
+            list.add(new EventData(new Random(10000).nextInt()+""));
         }
         return list;
     }
